@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Testes</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #12345a;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    header h1 { margin: 0 0 10px; }
+
+    main {
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px #0f172a10;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #12345a;
+      font-size: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      margin: 8px 0 12px;
+      font-size: 15px;
+    }
+
+    .botao {
+      display: inline-block;
+      border: none;
+      border-radius: 8px;
+      background: #1673d1;
+      color: white;
+      padding: 12px 18px;
+      margin: 3px 5px 3px 0;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .botao:hover { background: #105ba8; }
+    .botao:disabled { opacity: .6; cursor: wait; }
+
+    .cinza { background: #526477; }
+    .vermelho { background: #b42318; }
+
+    .resumo {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .numero {
+      background: #e8f1fc;
+      padding: 18px 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .numero strong {
+      display: block;
+      font-size: 27px;
+      color: #1769aa;
+      margin-bottom: 5px;
+    }
+
+    #mensagem {
+      margin-top: 14px;
+      padding: 12px;
+      background: #eff6ff;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .nota {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tabela {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      overflow-wrap: anywhere;
+    }
+
+    th { color: #475569; }
+
+    .status {
+      font-weight: bold;
+    }
+
+    .ok { color: #16804a; }
+    .erro { color: #b42318; }
+    .aviso { color: #9a6700; }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .resumo { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Central de Testes</h1>
+  <p>Validação de URLs e histórico de verificações</p>
+</header>
+
+<main>
+
+  <section class="resumo">
+    <div class="numero">
+      <strong id="total">0</strong>
+      Total de testes
+    </div>
+    <div class="numero">
+      <strong id="validos">0</strong>
+      URLs válidas
+    </div>
+    <div class="numero">
+      <strong id="inconclusivos">0</strong>
+      Inconclusivos
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>1. Validar e testar URL</h2>
+
+    <label for="url">Endereço do site</label>
+    <input
+      type="text"
+      id="url"
+      placeholder="https://www.exemplo.com.br"
+    >
+
+    <button class="botao" id="validarBtn" onclick="testarUrl()">
+      Validar URL
+    </button>
+
+    <button class="botao cinza" onclick="abrirUrl()">
+      Abrir site
+    </button>
+
+    <div id="mensagem" aria-live="polite">
+      Digite uma URL para começar.
+    </div>
+
+    <p class="nota">
+      O teste de acesso depende das permissões do site.
+      Um bloqueio do navegador não significa necessariamente
+      que o endereço esteja fora do ar.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>2. Histórico de testes</h2>
+
+    <button class="botao cinza" onclick="exportarHistorico()">
+      Exportar CSV
+    </button>
+
+    <button class="botao vermelho" onclick="limparHistorico()">
+      Limpar histórico
+    </button>
+
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Data e hora</th>
+            <th>URL</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody id="historico"></tbody>
+      </table>
+    </div>
+
+    <p id="semHistorico" class="nota">
+      Nenhum teste realizado ainda.
+    </p>
+  </section>
+
+</main>
+
+<footer>Central de Testes | Versão 2.0</footer>
+
+<script>
+  const CHAVE = "centralTestesHistorico";
+  let historico = carregarHistorico();
+
+  function carregarHistorico() {
+    try {
+      const dados = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+      return Array.isArray(dados) ? dados : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function salvarHistorico() {
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify(historico));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function normalizarUrl(valor) {
+    let texto = valor.trim();
+
+    if (!texto) {
+      throw new Error("Digite uma URL.");
+    }
+
+    if (!/^https?:\/\//i.test(texto)) {
+      texto = "https://" + texto;
+    }
+
+    const url = new URL(texto);
+
+    if (!["http:", "https:"].includes(url.protocol)) {
+      throw new Error("Use um endereço HTTP ou HTTPS.");
+    }
+
+    if (!url.hostname.includes(".")) {
+      throw new Error("Informe um domínio válido, como exemplo.com.");
+    }
+
+    return url.href;
+  }
+
+  async function testarUrl() {
+    const campo = document.getElementById("url");
+    const mensagem = document.getElementById("mensagem");
+    const botao = document.getElementById("validarBtn");
+
+    let endereco;
+
+    try {
+      endereco = normalizarUrl(campo.value);
+    } catch (erro) {
+      mensagem.textContent = erro.message;
+      return;
+    }
+
+    campo.value = endereco;
+    botao.disabled = true;
+    botao.textContent = "Testando...";
+    mensagem.textContent = "Verificando o acesso ao endereço...";
+
+    let resultado = "Inconclusivo";
+    let detalhe = "O navegador não permitiu confirmar a resposta.";
+
+    try {
+      const resposta = await fetch(endereco, {
+        method: "HEAD",
+        mode: "cors",
+        signal: AbortSignal.timeout(8000)
+      });
+
+      if (resposta.ok) {
+        resultado = "Acesso confirmado";
+        detalhe = "O servidor respondeu com HTTP " + resposta.status + ".";
+      } else {
+        resultado = "Resposta HTTP";
+        detalhe = "O servidor respondeu com HTTP " + resposta.status + ".";
+      }
+    } catch {
+      resultado = "Inconclusivo";
+      detalhe =
+        "Não foi possível confirmar a resposta. Pode ser bloqueio CORS, " +
+        "timeout ou indisponibilidade do servidor.";
+    }
+
+    const registro = {
+      data: new Date().toLocaleString("pt-BR"),
+      url: endereco,
+      resultado: resultado,
+      detalhe: detalhe
+    };
+
+    historico.unshift(registro);
+    historico = historico.slice(0, 100);
+
+    const salvo = salvarHistorico();
+
+    mensagem.textContent = resultado + ": " + detalhe;
+
+    if (!salvo) {
+      mensagem.textContent +=
+        " Atenção: o navegador não conseguiu salvar o histórico.";
+    }
+
+    atualizarTela();
+
+    botao.disabled = false;
+    botao.textContent = "Validar URL";
+  }
+
+  function abrirUrl() {
+    try {
+      const endereco = normalizarUrl(
+        document.getElementById("url").value
+      );
+
+      window.open(endereco, "_blank", "noopener,noreferrer");
+    } catch (erro) {
+      document.getElementById("mensagem").textContent = erro.message;
+    }
+  }
+
+  function atualizarTela() {
+    const corpo = document.getElementById("historico");
+    corpo.replaceChildren();
+
+    document.getElementById("total").textContent = historico.length;
+
+    document.getElementById("validos").textContent =
+      historico.filter(item =>
+        item.resultado === "Acesso confirmado"
+      ).length;
+
+    document.getElementById("inconclusivos").textContent =
+      historico.filter(item =>
+        item.resultado === "Inconclusivo"
+      ).length;
+
+    document.getElementById("semHistorico").hidden =
+      historico.length > 0;
+
+    historico.forEach(item => {
+      const linha = document.createElement("tr");
+
+      const data = document.createElement("td");
+      data.textContent = item.data;
+
+      const url = document.createElement("td");
+      url.textContent = item.url;
+
+      const resultado = document.createElement("td");
+      resultado.textContent = item.resultado;
+      resultado.title = item.detalhe;
+
+      resultado.className = "status " +
+        (item.resultado === "Acesso confirmado"
+          ? "ok"
+          : item.resultado === "Inconclusivo"
+            ? "aviso"
+            : "erro");
+
+      linha.append(data, url, resultado);
+      corpo.appendChild(linha);
+    });
+  }
+
+  function exportarHistorico() {
+    if (!historico.length) {
+      alert("Não há histórico para exportar.");
+      return;
+    }
+
+    const escapar = valor =>
+      '"' + String(valor).replace(/"/g, '""') + '"';
+
+    const linhas = [
+      ["Data e hora", "URL", "Resultado", "Detalhe"],
+      ...historico.map(item => [
+        item.data, item.url, item.resultado, item.detalhe
+      ])
+    ];
+
+    const csv = "\uFEFF" + linhas
+      .map(linha => linha.map(escapar).join(";"))
+      .join("\r\n");
+
+    const arquivo = new Blob([csv], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(arquivo);
+    link.download = "historico-testes.csv";
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+  }
+
+  function limparHistorico() {
+    if (!confirm("Deseja realmente apagar todo o histórico?")) {
+      return;
+    }
+
+    historico = [];
+    salvarHistorico();
+    atualizarTela();
+
+    document.getElementById("mensagem").textContent =
+      "Histórico limpo.";
+  }
+
+  atualizarTela();
+</script>
+
+</body>
+</html>
