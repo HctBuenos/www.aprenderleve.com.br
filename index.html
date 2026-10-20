@@ -1,457 +1,374 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Central de Testes</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-    }
-
-    header {
-      background: #12345a;
-      color: white;
-      padding: 28px 20px;
-      text-align: center;
-    }
-
-    header h1 { margin: 0 0 10px; }
-
-    main {
-      max-width: 950px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 24px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px #0f172a10;
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #12345a;
-      font-size: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      margin: 8px 0 12px;
-      font-size: 15px;
-    }
-
-    .botao {
-      display: inline-block;
-      border: none;
-      border-radius: 8px;
-      background: #1673d1;
-      color: white;
-      padding: 12px 18px;
-      margin: 3px 5px 3px 0;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .botao:hover { background: #105ba8; }
-    .botao:disabled { opacity: .6; cursor: wait; }
-
-    .cinza { background: #526477; }
-    .vermelho { background: #b42318; }
-
-    .resumo {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .numero {
-      background: #e8f1fc;
-      padding: 18px 10px;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .numero strong {
-      display: block;
-      font-size: 27px;
-      color: #1769aa;
-      margin-bottom: 5px;
-    }
-
-    #mensagem {
-      margin-top: 14px;
-      padding: 12px;
-      background: #eff6ff;
-      border-radius: 8px;
-      overflow-wrap: anywhere;
-    }
-
-    .nota {
-      color: #64748b;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .tabela {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 8px;
-      border-bottom: 1px solid #e2e8f0;
-      overflow-wrap: anywhere;
-    }
-
-    th { color: #475569; }
-
-    .status {
-      font-weight: bold;
-    }
-
-    .ok { color: #16804a; }
-    .erro { color: #b42318; }
-    .aviso { color: #9a6700; }
-
-    footer {
-      text-align: center;
-      color: #64748b;
-      padding: 20px;
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-      .resumo { grid-template-columns: 1fr; }
-      .card { padding: 18px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fffaf2">
+<meta name="description" content="Aprender Leve: aulas de reforço a partir dos 5 anos, alfabetização, preparação para provas e acompanhamento individual.">
+<title>Aprender Leve | Aprender com confiança, crescer com leveza</title>
+<style>
+:root{
+  --navy:#20334d; --ink:#29384b; --muted:#687789; --coral:#f0645b;
+  --coral-dark:#d94f48; --yellow:#f7cf69; --mint:#b9e2d2; --sky:#dcecf7;
+  --cream:#fffaf2; --white:#fff; --line:#e9e4da; --shadow:0 18px 45px rgba(42,58,76,.09);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.6}
+a{color:inherit}
+button,input,textarea,select{font:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #4f91d7;outline-offset:3px}
+.wrap{width:min(1120px,calc(100% - 40px));margin-inline:auto}
+.topbar{padding:14px 0;border-bottom:1px solid rgba(32,51,77,.08);background:rgba(255,250,242,.88)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850;letter-spacing:-.6px;color:var(--navy);font-size:1.22rem}
+.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:15px;background:var(--coral);color:#fff;font-size:23px;transform:rotate(-5deg)}
+.brand small{display:block;color:var(--muted);font-size:.67rem;font-weight:650;letter-spacing:.04em;margin-top:-4px}
+.navlinks{display:flex;align-items:center;gap:27px}
+.navlinks a{text-decoration:none;font-weight:650;font-size:.92rem;color:#536174}
+.navlinks a:hover{color:var(--coral-dark)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:999px;padding:13px 21px;text-decoration:none;font-weight:800;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--coral);color:#fff;box-shadow:0 8px 20px rgba(240,100,91,.22)}
+.btn-primary:hover{background:var(--coral-dark)}
+.btn-secondary{background:#fff;border:1px solid var(--line);color:var(--navy)}
+.menu-toggle{display:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 12px;color:var(--navy)}
+.hero{padding:72px 0 58px;overflow:hidden;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:48px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:#fff0e8;color:#a94a3d;font-size:.8rem;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+.eyebrow span{width:8px;height:8px;border-radius:50%;background:var(--coral)}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(2.65rem,5.5vw,4.7rem);line-height:1.03;letter-spacing:-.065em;color:var(--navy);margin:20px 0}
+h1 em{font-style:normal;color:var(--coral);position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:0;bottom:-7px;width:100%;height:7px;background:var(--yellow);border-radius:50%;transform:rotate(-2deg)}
+.hero-copy{font-size:1.12rem;max-width:540px;color:#637185;margin-bottom:28px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.trust-row{display:flex;flex-wrap:wrap;gap:17px;margin-top:25px;color:#637185;font-size:.88rem;font-weight:650}
+.trust-row span{display:flex;align-items:center;gap:7px}
+.check{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:var(--mint);color:#245b4c;font-size:.78rem;font-weight:900}
+.hero-art{position:relative;min-height:420px;display:grid;place-items:center}
+.art-backdrop{position:absolute;inset:22px 10px 12px 18px;border-radius:48% 52% 42% 58%/46% 42% 58% 54%;background:var(--sky);transform:rotate(3deg)}
+.art-card{position:relative;width:min(100%,420px);background:#fff;border-radius:30px;padding:28px;box-shadow:var(--shadow);transform:rotate(-2deg);border:1px solid rgba(32,51,77,.05)}
+.art-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.art-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:#718094}
+.stars{color:#e6ad39;letter-spacing:2px}
+.art-title{font-size:1.85rem;line-height:1.1;letter-spacing:-.05em;color:var(--navy);font-weight:900;margin-bottom:9px}
+.art-title b{color:var(--coral)}
+.art-sub{font-size:.9rem;color:var(--muted);margin-bottom:24px}
+.letter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}
+.letter{height:68px;display:grid;place-items:center;border-radius:15px;font-size:1.7rem;font-weight:900;color:var(--navy)}
+.letter:nth-child(1){background:#fff0e8;color:#d9584f}.letter:nth-child(2){background:#fff3ce}.letter:nth-child(3){background:#dff2e9}.letter:nth-child(4){background:#e4effa}
+.progress-line{height:9px;background:#edf0f4;border-radius:99px;overflow:hidden;margin:10px 0 7px}
+.progress-line span{display:block;height:100%;width:72%;background:var(--coral);border-radius:99px}
+.progress-caption{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);font-weight:700}
+.float-note{position:absolute;padding:13px 17px;background:#fff;border-radius:17px;box-shadow:var(--shadow);font-size:.88rem;font-weight:850;color:var(--navy)}
+.float-note b{font-size:1.15rem;margin-right:6px}
+.note-one{top:24px;right:-2px;transform:rotate(5deg)}.note-two{bottom:22px;left:-7px;transform:rotate(-5deg)}
+.doodle{position:absolute;color:var(--coral);font-size:3rem;font-weight:900;opacity:.9}
+.doodle-one{top:5px;left:10px;transform:rotate(-18deg)}.doodle-two{right:2px;bottom:40px;color:#d9a82c;transform:rotate(15deg)}
+.strip{background:var(--navy);color:#fff;padding:19px 0}
+.strip-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.strip strong{font-size:1rem}.strip-items{display:flex;flex-wrap:wrap;gap:24px;color:#e6edf5;font-size:.9rem}
+.strip-items span:before{content:"✦";color:var(--yellow);margin-right:8px}
+section.content{padding:82px 0}
+.section-head{text-align:center;max-width:680px;margin:0 auto 40px}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--coral-dark);margin-bottom:12px}
+h2{font-size:clamp(2rem,4vw,3rem);line-height:1.12;letter-spacing:-.05em;color:var(--navy);margin-bottom:15px}
+.section-head p{font-size:1.04rem;color:var(--muted);margin-bottom:0}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.service{padding:26px;background:#fff;border:1px solid rgba(32,51,77,.06);border-radius:var(--radius);box-shadow:0 8px 24px rgba(42,58,76,.035);transition:transform .2s,box-shadow .2s}
+.service:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.service-icon{width:55px;height:55px;border-radius:18px;display:grid;place-items:center;font-size:1.7rem;margin-bottom:18px}
+.service:nth-child(1) .service-icon{background:#fff0e8}.service:nth-child(2) .service-icon{background:#fff3ce}.service:nth-child(3) .service-icon{background:#dff2e9}.service:nth-child(4) .service-icon{background:#e4effa}.service:nth-child(5) .service-icon{background:#f9e4ee}.service:nth-child(6) .service-icon{background:#e9e4fb}
+.service h3{font-size:1.16rem;color:var(--navy);margin-bottom:8px;letter-spacing:-.025em}
+.service p{color:var(--muted);font-size:.94rem;margin:0}
+.age-section{background:#f1f6f3}
+.age-grid{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:55px}
+.age-visual{background:var(--yellow);border-radius:32px;min-height:320px;padding:32px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+.age-visual:before,.age-visual:after{content:"";position:absolute;border:2px solid rgba(32,51,77,.16);border-radius:50%;width:220px;height:220px;right:-55px;top:-70px}
+.age-visual:after{width:160px;height:160px;right:-25px;top:-40px}
+.age-big{font-size:5.5rem;font-weight:950;line-height:1;color:var(--navy);letter-spacing:-.09em;z-index:1}
+.age-big span{font-size:1.3rem;letter-spacing:0}
+.age-visual p{font-size:1.12rem;font-weight:800;color:#3e4a57;max-width:240px;z-index:1;margin:0}
+.age-sticker{align-self:flex-end;background:#fff;padding:10px 15px;border-radius:999px;font-weight:850;color:var(--coral-dark);transform:rotate(-5deg);z-index:1}
+.age-copy h2{max-width:520px}
+.age-copy p{color:var(--muted)}
+.bullet-list{list-style:none;padding:0;margin:22px 0 28px;display:grid;gap:12px}
+.bullet-list li{display:flex;gap:11px;align-items:flex-start;font-weight:700;color:#465568}
+.bullet-list .check{flex:0 0 21px;margin-top:2px}
+.approach-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.approach-card{padding:30px;border-radius:var(--radius);background:#fff;border:1px solid var(--line)}
+.approach-card.highlight{background:#fff0e8;border-color:#ffe0d4}
+.approach-card .mini-icon{font-size:1.8rem;margin-bottom:14px}
+.approach-card h3{color:var(--navy);font-size:1.35rem;margin-bottom:9px}
+.approach-card p{color:var(--muted);margin-bottom:0}
+.note{font-size:.83rem;color:#778394;margin-top:20px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:step}
+.step{padding:26px 22px;border-top:3px solid var(--mint);background:#fff;border-radius:0 0 20px 20px}
+.step-number{display:grid;place-items:center;width:39px;height:39px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900;margin-bottom:18px}
+.step h3{font-size:1.1rem;color:var(--navy);margin-bottom:8px}
+.step p{font-size:.94rem;color:var(--muted);margin:0}
+.cta-band{padding:0 0 82px}
+.cta-panel{background:var(--navy);border-radius:32px;padding:46px;display:flex;align-items:center;justify-content:space-between;gap:32px;position:relative;overflow:hidden}
+.cta-panel:after{content:"✳";position:absolute;right:28%;top:-50px;font-size:10rem;color:rgba(255,255,255,.055);transform:rotate(18deg)}
+.cta-panel h2{color:#fff;max-width:620px;margin-bottom:10px}
+.cta-panel p{color:#d5deea;max-width:600px;margin:0}
+.cta-panel .btn{flex-shrink:0;z-index:1}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:38px;align-items:start}
+.contact-copy p{color:var(--muted)}
+.contact-list{display:grid;gap:12px;margin-top:25px}
+.contact-item{display:flex;align-items:center;gap:12px;font-weight:750;color:var(--navy)}
+.contact-item span{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:#fff0e8}
+.contact-form{background:#fff;border:1px solid var(--line);padding:28px;border-radius:26px;box-shadow:var(--shadow)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:.86rem;font-weight:800;color:#445367;margin-bottom:6px}
+input,textarea,select{width:100%;border:1px solid #dce2e8;border-radius:12px;padding:12px 13px;background:#fff;color:var(--ink);margin-bottom:15px}
+textarea{min-height:105px;resize:vertical}
+.form-help{font-size:.8rem;color:var(--muted);margin:8px 0 0}
+.form-message{display:none;margin-top:14px;padding:12px 14px;background:#fff3ce;border-radius:12px;color:#735b1a;font-size:.9rem}
+footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:.86rem}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.footer-brand{font-weight:900;color:var(--navy)}
+@media(max-width:850px){
+ .hero-grid,.age-grid,.contact-grid{grid-template-columns:1fr}
+ .hero{padding-top:48px}.hero-art{min-height:390px;max-width:540px;width:100%;margin:auto}
+ .services{grid-template-columns:repeat(2,1fr)}
+ .age-grid{gap:30px}.age-visual{min-height:260px}
+ .cta-panel{align-items:flex-start;flex-direction:column;padding:34px}
+}
+@media(max-width:620px){
+ .wrap{width:min(100% - 28px,1120px)}
+ .navlinks{display:none;position:absolute;left:14px;right:14px;top:72px;z-index:10;padding:18px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:15px}
+ .navlinks.open{display:flex}.navlinks .btn{width:100%}.menu-toggle{display:block}
+ .nav>.btn{display:none}
+ h1{font-size:clamp(2.5rem,12vw,3.7rem)}
+ .hero{padding:42px 0 40px}.hero-grid{gap:25px}.hero-copy{font-size:1rem}
+ .hero-art{min-height:340px}.art-card{padding:22px;width:calc(100% - 18px)}.letter{height:57px}
+ .note-one{right:-2px;top:3px}.note-two{left:-2px;bottom:8px}.float-note{font-size:.78rem;padding:10px 12px}
+ .strip-inner{align-items:flex-start;flex-direction:column}.strip-items{gap:10px 18px}
+ section.content{padding:60px 0}.section-head{margin-bottom:28px}
+ .services,.approach-grid,.steps{grid-template-columns:1fr}
+ .service{padding:22px}.age-visual{min-height:245px;padding:25px}
+ .age-big{font-size:4.7rem}.cta-band{padding-bottom:60px}.cta-panel{padding:28px 23px;border-radius:24px}
+ .contact-form{padding:20px}.form-row{grid-template-columns:1fr;gap:0}
+ .footer-inner{align-items:flex-start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+</style>
 </head>
-
 <body>
-
-<header>
-  <h1>Central de Testes</h1>
-  <p>Validação de URLs e histórico de verificações</p>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="#inicio" aria-label="Aprender Leve - início">
+      <span class="brand-mark">✎</span>
+      <span>aprender leve<small>APRENDER COM CONFIANÇA</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navlinks">☰ Menu</button>
+    <nav class="navlinks" id="navlinks" aria-label="Navegação principal">
+      <a href="#servicos">Aulas e serviços</a>
+      <a href="#metodo">Nossa abordagem</a>
+      <a href="#contato">Contato</a>
+      <a class="btn btn-primary" href="#contato">Quero saber mais <span aria-hidden="true">↗</span></a>
+    </nav>
+    <a class="btn btn-primary" href="#contato">Fale conosco <span aria-hidden="true">↗</span></a>
+  </div>
 </header>
 
-<main>
-
-  <section class="resumo">
-    <div class="numero">
-      <strong id="total">0</strong>
-      Total de testes
-    </div>
-    <div class="numero">
-      <strong id="validos">0</strong>
-      URLs válidas
-    </div>
-    <div class="numero">
-      <strong id="inconclusivos">0</strong>
-      Inconclusivos
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span></span> Aulas de reforço a partir dos 5 anos</div>
+        <h1>Aprender pode ser mais <em>leve.</em></h1>
+        <p class="hero-copy">Um espaço de acolhimento, incentivo e aprendizagem para cada criança desenvolver seu potencial no próprio ritmo.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contato">Vamos conversar <span aria-hidden="true">→</span></a>
+          <a class="btn btn-secondary" href="#servicos">Conheça as aulas</a>
+        </div>
+        <div class="trust-row">
+          <span><i class="check">✓</i> Acompanhamento individual</span>
+          <span><i class="check">✓</i> Respeito ao ritmo de cada aluno</span>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="Ilustração de materiais escolares e letras">
+        <div class="art-backdrop"></div>
+        <span class="doodle doodle-one" aria-hidden="true">✳</span>
+        <span class="doodle doodle-two" aria-hidden="true">⌁</span>
+        <div class="float-note note-one"><b>✦</b> Cada conquista importa!</div>
+        <div class="art-card">
+          <div class="art-top"><span class="art-label">Um passo de cada vez</span><span class="stars">★ ★ ★</span></div>
+          <div class="art-title">Descobrir.<br><b>Praticar.</b> Conquistar.</div>
+          <p class="art-sub">Aprendizagem com incentivo, cuidado e propósito.</p>
+          <div class="letter-grid" aria-hidden="true">
+            <div class="letter">A</div><div class="letter">B</div><div class="letter">C</div><div class="letter">D</div>
+          </div>
+          <div class="progress-caption"><span>Pequenos passos</span><span>Grandes descobertas</span></div>
+          <div class="progress-line"><span></span></div>
+        </div>
+        <div class="float-note note-two"><b>♡</b> Aprender no seu tempo</div>
+      </div>
     </div>
   </section>
 
-  <section class="card">
-    <h2>1. Validar e testar URL</h2>
-
-    <label for="url">Endereço do site</label>
-    <input
-      type="text"
-      id="url"
-      placeholder="https://www.exemplo.com.br"
-    >
-
-    <button class="botao" id="validarBtn" onclick="testarUrl()">
-      Validar URL
-    </button>
-
-    <button class="botao cinza" onclick="abrirUrl()">
-      Abrir site
-    </button>
-
-    <div id="mensagem" aria-live="polite">
-      Digite uma URL para começar.
+  <div class="strip">
+    <div class="wrap strip-inner">
+      <strong>Um reforço que olha para cada criança por inteiro.</strong>
+      <div class="strip-items"><span>Escuta e acolhimento</span><span>Aprendizagem individualizada</span><span>Parceria com a família</span></div>
     </div>
+  </div>
 
-    <p class="nota">
-      O teste de acesso depende das permissões do site.
-      Um bloqueio do navegador não significa necessariamente
-      que o endereço esteja fora do ar.
-    </p>
+  <section class="content" id="servicos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">Como podemos ajudar</div>
+        <h2>Aprendizagem para cada etapa</h2>
+        <p>Atividades pensadas para fortalecer habilidades, construir confiança e tornar o aprendizado mais significativo.</p>
+      </div>
+      <div class="services">
+        <article class="service"><div class="service-icon" aria-hidden="true">🔤</div><h3>Alfabetização</h3><p>Estímulo à leitura e à escrita, respeitando a etapa de desenvolvimento de cada criança.</p></article>
+        <article class="service"><div class="service-icon" aria-hidden="true">📝</div><h3>Preparação para provas</h3><p>Revisão de conteúdos, organização dos estudos e prática para chegar às avaliações com mais segurança.</p></article>
+        <article class="service"><div class="service-icon" aria-hidden="true">🌱</div><h3>Acompanhamento individual</h3><p>Atendimento atento às necessidades, às dificuldades e aos avanços de cada aluno.</p></article>
+        <article class="service"><div class="service-icon" aria-hidden="true">📚</div><h3>Reforço por matéria</h3><p>Apoio em conteúdos específicos para esclarecer dúvidas e consolidar o que foi aprendido.</p></article>
+        <article class="service"><div class="service-icon" aria-hidden="true">🧩</div><h3>Estratégias personalizadas</h3><p>Propostas flexíveis e recursos variados para tornar as atividades mais acessíveis e envolventes.</p></article>
+        <article class="service"><div class="service-icon" aria-hidden="true">🤝</div><h3>Parceria com a família</h3><p>Diálogo sobre objetivos, rotina de estudos e próximos passos para apoiar a aprendizagem.</p></article>
+      </div>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>2. Histórico de testes</h2>
-
-    <button class="botao cinza" onclick="exportarHistorico()">
-      Exportar CSV
-    </button>
-
-    <button class="botao vermelho" onclick="limparHistorico()">
-      Limpar histórico
-    </button>
-
-    <div class="tabela">
-      <table>
-        <thead>
-          <tr>
-            <th>Data e hora</th>
-            <th>URL</th>
-            <th>Resultado</th>
-          </tr>
-        </thead>
-        <tbody id="historico"></tbody>
-      </table>
+  <section class="content age-section">
+    <div class="wrap age-grid">
+      <div class="age-visual">
+        <div class="age-big">5<span>+ anos</span></div>
+        <p>Uma jornada de descobertas começa com acolhimento.</p>
+        <div class="age-sticker">Seu ritmo. Suas conquistas. ✨</div>
+      </div>
+      <div class="age-copy">
+        <div class="kicker">Um cuidado que faz diferença</div>
+        <h2>Mais do que acertar respostas: ganhar confiança.</h2>
+        <p>Cada criança aprende de um jeito. Por isso, o acompanhamento começa com escuta e atenção ao que ela já sabe, ao que precisa desenvolver e ao que desperta sua curiosidade.</p>
+        <ul class="bullet-list">
+          <li><span class="check">✓</span><span>Objetivos de aprendizagem claros e possíveis.</span></li>
+          <li><span class="check">✓</span><span>Atividades adequadas à idade e às necessidades observadas.</span></li>
+          <li><span class="check">✓</span><span>Incentivo à autonomia, à curiosidade e à autoestima.</span></li>
+        </ul>
+        <a class="btn btn-primary" href="#contato">Converse sobre as necessidades do aluno <span aria-hidden="true">→</span></a>
+      </div>
     </div>
-
-    <p id="semHistorico" class="nota">
-      Nenhum teste realizado ainda.
-    </p>
   </section>
 
+  <section class="content" id="metodo">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">Nosso jeito de ensinar</div>
+        <h2>Acolher, compreender, construir junto</h2>
+        <p>Uma proposta que valoriza as possibilidades de cada aluno e mantém a família por perto durante o processo.</p>
+      </div>
+      <div class="approach-grid">
+        <article class="approach-card highlight"><div class="mini-icon" aria-hidden="true">💛</div><h3>Respeito às diferenças</h3><p>Consideramos as características e necessidades de cada criança. Para alunos com autismo, dislexia, TDAH, TOD ou outras necessidades, o planejamento deve ser conversado individualmente com a família.</p></article>
+        <article class="approach-card"><div class="mini-icon" aria-hidden="true">🌈</div><h3>Aprender sem comparações</h3><p>Valorizamos o progresso individual, celebramos pequenas conquistas e buscamos criar um ambiente positivo para perguntar, experimentar e aprender.</p></article>
+      </div>
+      <p class="note">O reforço escolar é um apoio educacional e não substitui avaliações, terapias ou acompanhamento de profissionais de saúde quando necessários. A disponibilidade de recursos específicos deve ser confirmada com a equipe.</p>
+    </div>
+  </section>
+
+  <section class="content" style="background:#fff7e6">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="kicker">Começar é simples</div>
+        <h2>O primeiro passo é uma conversa</h2>
+        <p>Conte um pouco sobre o momento escolar da criança para que possamos entender como orientar o próximo passo.</p>
+      </div>
+      <div class="steps">
+        <article class="step"><div class="step-number">1</div><h3>Conte sua necessidade</h3><p>Fale sobre a idade, a etapa escolar e as habilidades que deseja desenvolver.</p></article>
+        <article class="step"><div class="step-number">2</div><h3>Conversem sobre possibilidades</h3><p>Alinhem objetivos, formato de atendimento e necessidades de aprendizagem.</p></article>
+        <article class="step"><div class="step-number">3</div><h3>Planejem os próximos passos</h3><p>Definam juntos uma proposta adequada à rotina e aos objetivos da criança.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <div class="cta-panel">
+        <div><h2>Vamos tornar a aprendizagem mais leve?</h2><p>Estamos aqui para ouvir, entender as necessidades e conversar sobre as possibilidades de acompanhamento.</p></div>
+        <a class="btn btn-primary" href="#contato">Entrar em contato <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="contato">
+    <div class="wrap contact-grid">
+      <div class="contact-copy">
+        <div class="kicker">Fale com o Aprender Leve</div>
+        <h2>Vamos conversar sobre o próximo passo?</h2>
+        <p>Preencha os campos e prepare uma mensagem para entrar em contato. Antes de publicar o site, configure o canal oficial de atendimento.</p>
+        <div class="contact-list">
+          <div class="contact-item"><span aria-hidden="true">✉</span><span>Atendimento mediante agendamento</span></div>
+          <div class="contact-item"><span aria-hidden="true">♡</span><span>Acolhimento para crianças a partir dos 5 anos</span></div>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div><label for="nome">Seu nome</label><input id="nome" name="nome" autocomplete="name" placeholder="Como podemos chamar você?" required></div>
+          <div><label for="idade">Idade da criança</label><select id="idade" name="idade" required><option value="">Selecione</option><option>5 a 6 anos</option><option>7 a 9 anos</option><option>10 a 12 anos</option><option>13 anos ou mais</option></select></div>
+        </div>
+        <label for="interesse">Como podemos ajudar?</label>
+        <select id="interesse" name="interesse" required>
+          <option value="">Selecione uma opção</option>
+          <option>Alfabetização</option><option>Preparação para provas</option><option>Reforço em matéria específica</option><option>Acompanhamento individual</option><option>Quero conversar sobre necessidades específicas</option><option>Outro assunto</option>
+        </select>
+        <label for="mensagemContato">Conte um pouco mais (opcional)</label>
+        <textarea id="mensagemContato" name="mensagem" placeholder="Quais são suas dúvidas ou objetivos? Evite incluir informações médicas sensíveis neste formulário."></textarea>
+        <button class="btn btn-primary" type="submit">Preparar mensagem <span aria-hidden="true">→</span></button>
+        <p class="form-help">Este formulário não envia dados automaticamente. Ele prepara uma mensagem depois que o canal de contato for configurado.</p>
+        <div class="form-message" id="formMessage" role="status"></div>
+      </form>
+    </div>
+  </section>
 </main>
 
-<footer>Central de Testes | Versão 2.0</footer>
+<footer>
+  <div class="wrap footer-inner">
+    <div><div class="footer-brand">✎ aprender leve</div><div>Aprender com confiança, crescer com leveza.</div></div>
+    <div>© <span id="year"></span> Aprender Leve. Todos os direitos reservados.</div>
+  </div>
+</footer>
 
 <script>
-  const CHAVE = "centralTestesHistorico";
-  let historico = carregarHistorico();
-
-  function carregarHistorico() {
-    try {
-      const dados = JSON.parse(localStorage.getItem(CHAVE) || "[]");
-      return Array.isArray(dados) ? dados : [];
-    } catch {
-      return [];
+  // Para ativar o envio por WhatsApp, substitua o valor abaixo pelo número oficial
+  // com código do país e DDD, somente números. Exemplo de formato: 5511999999999.
+  const WHATSAPP_NUMBER = "";
+  const toggle = document.getElementById("menuToggle");
+  const nav = document.getElementById("navlinks");
+  toggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+  nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  }));
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("contactForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const message = [
+      "Olá! Gostaria de saber mais sobre o Aprender Leve.",
+      "Nome: " + data.get("nome"),
+      "Idade da criança: " + data.get("idade"),
+      "Interesse: " + data.get("interesse"),
+      data.get("mensagem") ? "Mensagem: " + data.get("mensagem") : ""
+    ].filter(Boolean).join("\n");
+    const status = document.getElementById("formMessage");
+    if (/^\d{10,15}$/.test(WHATSAPP_NUMBER)) {
+      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message), "_blank", "noopener,noreferrer");
+      status.style.display = "block";
+      status.textContent = "Sua mensagem foi preparada no WhatsApp. Revise e envie por lá.";
+    } else {
+      status.style.display = "block";
+      status.textContent = "O formulário está pronto, mas o WhatsApp ainda não foi configurado. Para ativá-lo, informe o número oficial no campo WHATSAPP_NUMBER, no final do arquivo HTML.";
     }
-  }
-
-  function salvarHistorico() {
-    try {
-      localStorage.setItem(CHAVE, JSON.stringify(historico));
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function normalizarUrl(valor) {
-    let texto = valor.trim();
-
-    if (!texto) {
-      throw new Error("Digite uma URL.");
-    }
-
-    if (!/^https?:\/\//i.test(texto)) {
-      texto = "https://" + texto;
-    }
-
-    const url = new URL(texto);
-
-    if (!["http:", "https:"].includes(url.protocol)) {
-      throw new Error("Use um endereço HTTP ou HTTPS.");
-    }
-
-    if (!url.hostname.includes(".")) {
-      throw new Error("Informe um domínio válido, como exemplo.com.");
-    }
-
-    return url.href;
-  }
-
-  async function testarUrl() {
-    const campo = document.getElementById("url");
-    const mensagem = document.getElementById("mensagem");
-    const botao = document.getElementById("validarBtn");
-
-    let endereco;
-
-    try {
-      endereco = normalizarUrl(campo.value);
-    } catch (erro) {
-      mensagem.textContent = erro.message;
-      return;
-    }
-
-    campo.value = endereco;
-    botao.disabled = true;
-    botao.textContent = "Testando...";
-    mensagem.textContent = "Verificando o acesso ao endereço...";
-
-    let resultado = "Inconclusivo";
-    let detalhe = "O navegador não permitiu confirmar a resposta.";
-
-    try {
-      const resposta = await fetch(endereco, {
-        method: "HEAD",
-        mode: "cors",
-        signal: AbortSignal.timeout(8000)
-      });
-
-      if (resposta.ok) {
-        resultado = "Acesso confirmado";
-        detalhe = "O servidor respondeu com HTTP " + resposta.status + ".";
-      } else {
-        resultado = "Resposta HTTP";
-        detalhe = "O servidor respondeu com HTTP " + resposta.status + ".";
-      }
-    } catch {
-      resultado = "Inconclusivo";
-      detalhe =
-        "Não foi possível confirmar a resposta. Pode ser bloqueio CORS, " +
-        "timeout ou indisponibilidade do servidor.";
-    }
-
-    const registro = {
-      data: new Date().toLocaleString("pt-BR"),
-      url: endereco,
-      resultado: resultado,
-      detalhe: detalhe
-    };
-
-    historico.unshift(registro);
-    historico = historico.slice(0, 100);
-
-    const salvo = salvarHistorico();
-
-    mensagem.textContent = resultado + ": " + detalhe;
-
-    if (!salvo) {
-      mensagem.textContent +=
-        " Atenção: o navegador não conseguiu salvar o histórico.";
-    }
-
-    atualizarTela();
-
-    botao.disabled = false;
-    botao.textContent = "Validar URL";
-  }
-
-  function abrirUrl() {
-    try {
-      const endereco = normalizarUrl(
-        document.getElementById("url").value
-      );
-
-      window.open(endereco, "_blank", "noopener,noreferrer");
-    } catch (erro) {
-      document.getElementById("mensagem").textContent = erro.message;
-    }
-  }
-
-  function atualizarTela() {
-    const corpo = document.getElementById("historico");
-    corpo.replaceChildren();
-
-    document.getElementById("total").textContent = historico.length;
-
-    document.getElementById("validos").textContent =
-      historico.filter(item =>
-        item.resultado === "Acesso confirmado"
-      ).length;
-
-    document.getElementById("inconclusivos").textContent =
-      historico.filter(item =>
-        item.resultado === "Inconclusivo"
-      ).length;
-
-    document.getElementById("semHistorico").hidden =
-      historico.length > 0;
-
-    historico.forEach(item => {
-      const linha = document.createElement("tr");
-
-      const data = document.createElement("td");
-      data.textContent = item.data;
-
-      const url = document.createElement("td");
-      url.textContent = item.url;
-
-      const resultado = document.createElement("td");
-      resultado.textContent = item.resultado;
-      resultado.title = item.detalhe;
-
-      resultado.className = "status " +
-        (item.resultado === "Acesso confirmado"
-          ? "ok"
-          : item.resultado === "Inconclusivo"
-            ? "aviso"
-            : "erro");
-
-      linha.append(data, url, resultado);
-      corpo.appendChild(linha);
-    });
-  }
-
-  function exportarHistorico() {
-    if (!historico.length) {
-      alert("Não há histórico para exportar.");
-      return;
-    }
-
-    const escapar = valor =>
-      '"' + String(valor).replace(/"/g, '""') + '"';
-
-    const linhas = [
-      ["Data e hora", "URL", "Resultado", "Detalhe"],
-      ...historico.map(item => [
-        item.data, item.url, item.resultado, item.detalhe
-      ])
-    ];
-
-    const csv = "\uFEFF" + linhas
-      .map(linha => linha.map(escapar).join(";"))
-      .join("\r\n");
-
-    const arquivo = new Blob([csv], {
-      type: "text/csv;charset=utf-8;"
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(arquivo);
-    link.download = "historico-testes.csv";
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-  }
-
-  function limparHistorico() {
-    if (!confirm("Deseja realmente apagar todo o histórico?")) {
-      return;
-    }
-
-    historico = [];
-    salvarHistorico();
-    atualizarTela();
-
-    document.getElementById("mensagem").textContent =
-      "Histórico limpo.";
-  }
-
-  atualizarTela();
+  });
 </script>
-
 </body>
 </html>
