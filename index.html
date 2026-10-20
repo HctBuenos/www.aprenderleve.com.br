@@ -361,7 +361,7 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
 <script>
   // Para ativar o envio por WhatsApp, substitua o valor abaixo pelo número oficial
   // com código do país e DDD, somente números. Exemplo de formato: 5511999999999.
-  const WHATSAPP_NUMBER = "";
+  const WHATSAPP_NUMBER = "5511981805044";
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("navlinks");
   toggle.addEventListener("click", () => {
@@ -373,26 +373,37 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
     toggle.setAttribute("aria-expanded", "false");
   }));
   document.getElementById("year").textContent = new Date().getFullYear();
-  document.getElementById("contactForm").addEventListener("submit", event => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const message = [
-      "Olá! Gostaria de saber mais sobre o Aprender Leve.",
-      "Nome: " + data.get("nome"),
-      "Idade da criança: " + data.get("idade"),
-      "Interesse: " + data.get("interesse"),
-      data.get("mensagem") ? "Mensagem: " + data.get("mensagem") : ""
-    ].filter(Boolean).join("\n");
-    const status = document.getElementById("formMessage");
-    if (/^\d{10,15}$/.test(WHATSAPP_NUMBER)) {
-      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message), "_blank", "noopener,noreferrer");
-      status.style.display = "block";
-      status.textContent = "Sua mensagem foi preparada no WhatsApp. Revise e envie por lá.";
-    } else {
-      status.style.display = "block";
-      status.textContent = "O formulário está pronto, mas o WhatsApp ainda não foi configurado. Para ativá-lo, informe o número oficial no campo WHATSAPP_NUMBER, no final do arquivo HTML.";
-    }
-  });
+ 
+document.getElementById("contactForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const data = new FormData(event.currentTarget);
+
+  const message = [
+    "Olá! Gostaria de saber mais sobre o Aprender Leve.",
+    "",
+    "Nome: " + data.get("nome"),
+    "Idade da criança: " + data.get("idade"),
+    "Como podemos ajudar: " + data.get("interesse"),
+    data.get("mensagem")
+      ? "Mensagem: " + data.get("mensagem")
+      : ""
+  ].filter(Boolean).join("\n");
+
+  const whatsappURL =
+    "https://wa.me/" +
+    WHATSAPP_NUMBER +
+    "?text=" +
+    encodeURIComponent(message);
+
+  window.open(whatsappURL, "_blank", "noopener,noreferrer");
+
+  const status = document.getElementById("formMessage");
+  status.style.display = "block";
+  status.textContent =
+    "Sua mensagem está pronta no WhatsApp. Confira os dados e toque em Enviar.";
+});
+
 </script>
 </body>
 </html>
